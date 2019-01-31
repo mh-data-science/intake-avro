@@ -125,13 +125,13 @@ class AvroSequenceSource(base.DataSource):
         import dask.bag as db
         self._get_schema()
         dpart = delayed(read_file_dask_from_avro)
-        return db.from_delayed([dpart(f) for f in self._files])
+        return db.from_delayed([dpart(f, self._storage_options) for f in self._files])
 
 
-def read_file_dask_from_avro(f):
+def read_file_dask_from_avro(f, storage_options):
     import dask.bag as db
     with f as f:
-        db.read_avro(f, storage_options=self._storage_options)
+        db.read_avro(f, storage_options=storage_options)
 
 
 def read_file_fastavro(f):
