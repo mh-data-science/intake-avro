@@ -123,6 +123,7 @@ class AvroSequenceSource(base.DataSource):
         """Create lazy dask bag object"""
         from dask import delayed
         import dask.bag as db
+        import dask_adlfs
         self._get_schema()
         dpart = delayed(read_file_dask_from_avro)
         return db.from_delayed([dpart(f, self._storage_options) for f in self._files])
