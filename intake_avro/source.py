@@ -129,13 +129,12 @@ class AvroSequenceSource(base.DataSource):
 
 
 def read_file_dask_from_avro(f, storage_options):
-    import importlib
-    import dask_adlfs
-    import dask
     from dask import bag as db
-    importlib.reload(dask)
-    importlib.reload(db)
-    importlib.reload(dask_adlfs)
+    
+    from dask_adlfs import DaskAdlFileSystem
+    from dask.bytes import core
+    core._filesystems['adl'] = DaskAdlFileSystem
+    
     with f as f:
         db.read_avro(f, storage_options=storage_options)
 
