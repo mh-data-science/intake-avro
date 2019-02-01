@@ -144,11 +144,11 @@ def read_file_dask_by_url(f, storage_options):
         try:
             return db.read_avro(f.path, storage_options=storage_options)
         except Exception as e:
-            raise "\n".join([
+            raise Exception("\n".join([
                 str(e),
                 str(dir(f)),
                 str([getattr(f, a) for a in dir(f)])
-            ])
+            ]))
 
 
 def read_file_fastavro(f):
