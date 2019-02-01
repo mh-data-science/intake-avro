@@ -129,20 +129,13 @@ class AvroSequenceSource(base.DataSource):
 
     def to_dask_by_urlpath(self):
         """Create lazy dask bag object"""
-        from dask import delayed
         import dask.bag as db
         self._get_schema()
-        dpart = delayed(read_file_dask_by_url)
+        
         actual_urlpath = self._storage_options['actual_urlpath']
         del self._storage_options['actual_urlpath']
-        return db.from_delayed([dpart(actual_urlpath, self._storage_options) for f in self._files])
-        # return db.from_delayed([dpart(self._urlpath, self._storage_options), ])
+        return db.read_avro(actual_urlpath, self._storage_options)
 
-
-def read_file_dask_by_url(f, storage_options):
-    from dask import bag as db
-    import dask_adlfs # needed in the background for dask
-    return db.read_avro(f, storage_options=storage_options)
 
 def read_file_fastavro(f):
     import fastavro
