@@ -133,12 +133,13 @@ class AvroSequenceSource(base.DataSource):
         import dask.bag as db
         self._get_schema()
         dpart = delayed(read_file_dask_by_url)
-        return db.from_delayed([dpart(f) for f in self._files])
+        return db.from_delayed([dpart(f, storage_options) for f in self._files])
         # return db.from_delayed([dpart(self._urlpath, self._storage_options), ])
 
 
 def read_file_dask_by_url(f, storage_options):
     from dask import bag as db
+    import dask_adlfs # needed in the background for dask
     with f as f:
         return db.read_avro(f.path, storage_options=storage_options)
 
